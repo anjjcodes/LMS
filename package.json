@@ -1,0 +1,30 @@
+{
+  "name": "lms",
+  "private": true,
+  "version": "1.0.0",
+  "description": "B2B License Management System",
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d --wait && npm run db:migrate && npm run db:seed",
+    "db:migrate": "npm run migrate -w backend",
+    "db:seed": "npm run seed -w backend",
+    "dev": "concurrently -n api,web -c blue,magenta \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "test": "npm run test -w backend",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "smoke": "node scripts/smoke.mjs $(grep SEED_API_KEY backend/.env | cut -d= -f2)"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
